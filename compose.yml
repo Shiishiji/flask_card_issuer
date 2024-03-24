@@ -14,6 +14,13 @@ services:
     ports:
       - '5000:5000'
 
+  cron:
+    build:
+      dockerfile: '_docker/cron/Dockerfile'
+      context: .
+    networks:
+      - kafka-network
+
   kafka:
     image: 'bitnami/kafka:latest'
     networks:
@@ -29,7 +36,6 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
 
   kafka-ui:
-    container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
     networks:
       - kafka-network

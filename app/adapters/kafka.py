@@ -1,6 +1,9 @@
-from kafka import KafkaProducer
+from pprint import pprint
+
+from kafka import KafkaProducer, KafkaConsumer
 import os
 
+TOPIC_CARD_ORDERED = "card_ordered"
 
 class KafkaAdapter:
     server: str
@@ -12,7 +15,9 @@ class KafkaAdapter:
 
     def topic_send(self, msg: str) -> None:
         producer = KafkaProducer(bootstrap_servers=[self.server], client_id=self.client_id)
-        producer.send('card_ordered', bytes(msg, 'utf-8'))
+        producer.send(TOPIC_CARD_ORDERED, bytes(msg, 'utf-8'))
 
     def topic_subscribe(self):
-        pass
+        consumer = KafkaConsumer(TOPIC_CARD_ORDERED, bootstrap_servers=[self.server], group_id="consumer-group-1")
+        record = consumer.poll()
+        pprint(record)
